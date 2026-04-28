@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Winson Joel Monis — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0c0f;
+      --surface: #13151a;
+      --border: #1e2028;
+      --accent: #e8ff47;
+      --accent2: #47d4ff;
+      --text: #e8eaf0;
+      --muted: #6b7080;
+      --tag-bg: #1a1d25;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ---- NOISE OVERLAY ---- */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(11,12,15,0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+
+    nav ul { list-style: none; display: flex; gap: 2.5rem; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* ---- SECTIONS ---- */
+    section { padding: 7rem 4rem; max-width: 1100px; margin: 0 auto; }
+
+    /* ---- HERO ---- */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 9rem;
+      position: relative;
+    }
+
+    .hero-tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s forwards;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .hero-sub {
+      margin-top: 1.8rem;
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0b0c0f;
+      font-weight: 700;
+    }
+    .btn-primary:hover { background: #d4e83e; transform: translateY(-2px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* decorative grid lines */
+    .hero-grid {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 40%;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to left, rgba(0,0,0,0.3), transparent);
+      pointer-events: none;
+    }
+
+    .hero-dot {
+      position: absolute;
+      right: 15%;
+      top: 45%;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,255,71,0.15), transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    /* ---- SECTION HEADERS ---- */
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 3rem;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ---- ABOUT ---- */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-text p { color: var(--muted); margin-bottom: 1rem; }
+    .about-text p strong { color: var(--text); }
+
+    .stat-row {
+      display: flex; flex-direction: column; gap: 1.5rem;
+    }
+
+    .stat-item {
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-item::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ---- SKILLS ---- */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.8rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .skill-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .skill-card-icon {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .skill-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.65rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .tag.accent { border-color: var(--accent); color: var(--accent); }
+    .tag.blue { border-color: var(--accent2); color: var(--accent2); }
+
+    /* ---- PROJECT ---- */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      transition: border-color 0.2s;
+    }
+
+    .project-card:hover { border-color: var(--accent2); }
+
+    .project-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 0.75rem;
+    }
+
+    .project-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .project-card p { color: var(--muted); max-width: 560px; }
+
+    .project-arrow {
+      font-size: 1.5rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ---- EXPERIENCE ---- */
+    .exp-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exp-item:last-child { border-bottom: none; }
+
+    .exp-date {
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding-top: 0.2rem;
+    }
+
+    .exp-content h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .exp-company {
+      color: var(--accent);
+      font-size: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .exp-content ul {
+      list-style: none;
+      color: var(--muted);
+    }
+
+    .exp-content ul li::before {
+      content: '→ ';
+      color: var(--accent);
+    }
+
+    /* ---- EDUCATION ---- */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.8rem;
+    }
+
+    .edu-degree {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .edu-inst { color: var(--muted); font-size: 0.82rem; margin-bottom: 0.8rem; }
+
+    .edu-score {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: rgba(232,255,71,0.08);
+      border: 1px solid rgba(232,255,71,0.3);
+      border-radius: 2px;
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
+
+    .edu-year {
+      float: right;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    /* ---- CONTACT ---- */
+    #contact { text-align: center; }
+    #contact h2 { margin-bottom: 1rem; }
+    #contact p { color: var(--muted); max-width: 480px; margin: 0 auto 2.5rem; }
+
+    .contact-links {
+      display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.6rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+    }
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50%       { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      nav ul { gap: 1.2rem; }
+      section { padding: 5rem 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .project-card { grid-template-columns: 1fr; }
+      .project-arrow { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">WJM</div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-dot"></div>
+  <p class="hero-tag">// Available for opportunities</p>
+  <h1>Winson<br/><span>Joel</span> Monis</h1>
+  <p class="hero-sub">
+    BCA Graduate · Data Analyst · Developer — building intelligent solutions at the intersection of data and code.
+  </p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">View My Work</a>
+    <a href="#contact" class="btn btn-outline">Get In Touch</a>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">// 01 — About</p>
+  <h2>Who I Am</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a <strong>BCA graduate</strong> from St Aloysius College, Mangalore, passionate about turning raw data into meaningful insights and building software that solves real problems.</p>
+      <p>I built a <strong>deep learning model</strong> for COVID-19 detection from CT scans during my final year, and honed my data skills through an internship at Codelab Systems where I worked with Python and Power BI.</p>
+      <p>I speak English, Kannada, Hindi, and Konkani — and I learn fast, adapt faster.</p>
+      <div class="tags" style="margin-top:1.5rem;">
+        <span class="tag accent">📍 Chikmagalur, Karnataka</span>
+        <span class="tag blue">🎓 BCA — CGPA 7.44</span>
+        <span class="tag">Open to Relocation</span>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Programming Languages Proficient In</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1</div>
+        <div class="stat-label">Published ML Project (DL Covid-19)</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1 mo</div>
+        <div class="stat-label">Data Analysis Internship Experience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Languages Spoken</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label">// 02 — Skills</p>
+  <h2>What I Work With</h2>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-card-icon">⚙️</div>
+      <h3>Programming</h3>
+      <div class="tags">
+        <span class="tag accent">Python</span>
+        <span class="tag">Java</span>
+        <span class="tag">C++</span>
+        <span class="tag">C</span>
+        <span class="tag">R</span>
+        <span class="tag">PHP</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">🌐</div>
+      <h3>Web Technologies</h3>
+      <div class="tags">
+        <span class="tag accent">HTML</span>
+        <span class="tag accent">CSS</span>
+        <span class="tag accent">JavaScript</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">📊</div>
+      <h3>Data & Analytics</h3>
+      <div class="tags">
+        <span class="tag blue">Power BI</span>
+        <span class="tag blue">MySQL</span>
+        <span class="tag blue">Data Visualization</span>
+        <span class="tag blue">Dashboards</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">🤝</div>
+      <h3>Soft Skills</h3>
+      <div class="tags">
+        <span class="tag">Communication</span>
+        <span class="tag">Problem Solving</span>
+        <span class="tag">Teamwork</span>
+        <span class="tag">Research</span>
+        <span class="tag">Adaptability</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label">// 03 — Projects</p>
+  <h2>What I've Built</h2>
+  <div class="project-card">
+    <div>
+      <p class="project-badge">BCA Final Year Project · 2024</p>
+      <h3>DL Covid-19 Detection Model</h3>
+      <p style="margin-bottom:1.2rem;">
+        Developed and validated a deep learning model capable of detecting COVID-19 from patient CT scans. Applied image classification techniques to a medical dataset, contributing to the field of AI-assisted diagnosis.
+      </p>
+      <div class="tags">
+        <span class="tag accent">Deep Learning</span>
+        <span class="tag accent">Python</span>
+        <span class="tag">CT Scan Analysis</span>
+        <span class="tag">Medical AI</span>
+        <span class="tag">Image Classification</span>
+      </div>
+    </div>
+    <div class="project-arrow">↗</div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label">// 04 — Experience</p>
+  <h2>Where I've Worked</h2>
+
+  <div class="exp-item">
+    <div class="exp-date">Dec 2023</div>
+    <div class="exp-content">
+      <h3>Data Analysis Intern</h3>
+      <p class="exp-company">Codelab Systems, Mangalore</p>
+      <ul>
+        <li>Gained hands-on experience with Python for data processing and analysis</li>
+        <li>Built interactive dashboards with Power BI featuring insightful visualizations</li>
+        <li>Learned to identify, classify, and wrangle data for analytical purposes</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-date">2024</div>
+    <div class="exp-content">
+      <h3>Python Programming — E-Learning</h3>
+      <p class="exp-company">Certification Course</p>
+      <ul>
+        <li>Completed structured Python course with focus on practical programming skills</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- EDUCATION -->
+<section id="education">
+  <p class="section-label">// 05 — Education</p>
+  <h2>Academic Background</h2>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-degree">BCA</div>
+      <div class="edu-inst">St Aloysius College (Autonomous), Mangalore</div>
+      <span class="edu-score">CGPA — 7.44</span>
+      <span class="edu-year">2023–24</span>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">PUC</div>
+      <div class="edu-inst">St Mary's Pre-University College, Chikmagalur</div>
+      <span class="edu-score">83%</span>
+      <span class="edu-year">2020–21</span>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">SSLC</div>
+      <div class="edu-inst">St Joseph's High School, Chikmagalur</div>
+      <span class="edu-score">77%</span>
+      <span class="edu-year">2019</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label">// 06 — Contact</p>
+  <h2>Let's Connect</h2>
+  <p>I'm actively looking for opportunities in data analysis, software development, or related fields. Reach out — I'd love to chat.</p>
+  <div class="contact-links">
+    <a href="mailto:winsonjoel21@gmail.com" class="contact-link">✉️ winsonjoel21@gmail.com</a>
+    <a href="tel:+917019169116" class="contact-link">📞 +91 70191 69116</a>
+    <a href="https://linkedin.com/in/winson-joel-monis" target="_blank" class="contact-link">🔗 LinkedIn</a>
+    <a href="https://github.com/winsonjoel" target="_blank" class="contact-link">🐙 GitHub</a>
+  </div>
+</section>
+
+<footer>
+  © 2025 Winson Joel Monis — Built with ♥ and HTML/CSS
+</footer>
+
+</body>
+</html>
